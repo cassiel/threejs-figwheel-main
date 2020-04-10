@@ -2,3 +2,29 @@
 #+STARTUP: indent
 
 * =threejs-figwheel-main=
+
+This is an update of the repo [[https://github.com/cassiel/threejs-figwheel][threejs-figwheel]] which has been left behind in the churn of Clojure[Script] tooling development. We have switched to [[https://figwheel.org/][Figwheel Main]]. We are still building with [[https://leiningen.org/][Leiningen]].
+
+The example code brings up a minimal [[http://threejs.org/][three.js]] environment coded in ClojureScript.
+
+* Installation
+
+We've followed the copious instructions [[https://figwheel.org/docs/installation.html][here]], opting for Leiningen rather than CLI Tools (mostly for familiarity).
+
+* Running
+
+In a terminal:
+
+#+BEGIN_SRC shell-script
+  lein fig -- --build dev --repl
+#+END_SRC
+
+That brings up a terminal REPL and hot-reloading of files.
+
+Or, for a full network REPL from emacs: =M-x cider-jack-in-cljs=, entering =figwheel-main= and =:dev= at the two prompts respectively.
+
+* License
+
+Copyright © 2020 Nick Rothwell, nick@cassiel.com.
+
+Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
