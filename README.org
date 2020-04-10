@@ -3,6 +3,7 @@
 
 * =threejs-figwheel-main=
 
+#+ATTR_HTML: :style width: 600px; margin-left: auto; margin-right: auto;
 [[https://raw.githubusercontent.com/cassiel/threejs-figwheel-main/master/splash.jpg]]
 
 This is an update of the repo [[https://github.com/cassiel/threejs-figwheel][threejs-figwheel]] which has been left behind in the churn of Clojure[Script] tooling development. We have switched to [[https://figwheel.org/][Figwheel Main]]. We are still building with [[https://leiningen.org/][Leiningen]].
