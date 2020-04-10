@@ -29,7 +29,7 @@ If everything is working, there should be a simple non-lit tumbling cube animate
 
 Whilst I generally prefer no-batteries-included examples to keep the content simple and focussed, for something stateful like three.js there are big benefits to using some off-the-shelf lifecycle code, so this project uses Stuart Sierra's [[https://github.com/stuartsierra/component][Component]], with a little bit of support from my own [[https://github.com/cassiel/lifecycle][Lifecycle]] library.
 
-This leads to a slight oddity: running the system from a ClojureScript file causes two launch attempts, which is benign but irritating. So the system is actually kicked off in a raw Javascript line embedded in =index.html= directly. (I'm not convinced this is much better.)
+This leads to a slight oddity: running the system from a ClojureScript file causes two launch attempts, which is benign but irritating. So the system is actually kicked off in a raw Javascript line embedded in =index.html= directly. I'm not convinced this is much better, but it does illustrate how to bring up and tear down the entire application from a browser console.
 
 * License
 

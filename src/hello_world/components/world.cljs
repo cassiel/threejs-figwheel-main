@@ -19,16 +19,25 @@
                                                                  1000)
                              renderer (js/THREE.WebGLRenderer.)
                              geometry (js/THREE.BoxGeometry. 1 1 1)
-                             material (js/THREE.MeshBasicMaterial. (clj->js {:color 0x00FF00
+                             material (js/THREE.MeshPhongMaterial. (clj->js {:color 0xFFFFFF
                                                                              :wireframe false}))
                              cube (js/THREE.Mesh. geometry material)
+                             light1 (js/THREE.PointLight. 0xFF0000 1 100)
+                             light2 (js/THREE.PointLight. 0x00FF00 1 100)
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]
                         (.setSize renderer (.-innerWidth js/window) (.-innerHeight js/window))
                         (.appendChild (.-body js/document) (.-domElement renderer))
-                        (.add scene cube)
-                        (set! (.. camera -position -z) 3)
+
+                        (doto scene
+                          (.add cube)
+                          (.add light1)
+                          (.add light2))
+
+                        (set! (.. camera -position -z) 2)
+                        (.set (.. light1 -position) 10 10 10)
+                        (.set (.. light2 -position) -10 10 10)
 
                         (letfn [(animate []
                                   (when @RUNNING (js/requestAnimationFrame animate))
