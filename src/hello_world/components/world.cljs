@@ -24,6 +24,8 @@
                              cube (js/THREE.Mesh. geometry material)
                              light1 (js/THREE.PointLight. 0xFF0000 1 100)
                              light2 (js/THREE.PointLight. 0x00FF00 1 100)
+
+                             controls (js/THREE.OrbitControls. camera (.-domElement renderer))
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]
@@ -36,15 +38,23 @@
                           (.add light2))
 
                         (set! (.. camera -position -z) 2)
+                        (.update controls)
+
+                        ;; Camera control preferences:
+                        (set! (.. controls -enableDamping) true)
+                        (set! (.. controls -dampingFactor) 0.25)
+                        (set! (.. controls -screenSpacePanning) false)
+
                         (.set (.. light1 -position) 10 10 10)
                         (.set (.. light2 -position) -10 10 10)
 
                         (letfn [(animate []
                                   (when @RUNNING (js/requestAnimationFrame animate))
-                                  (set! (.. cube -rotation -x)
+                                  #_ (set! (.. cube -rotation -x)
                                         (+ 0.01 (.. cube -rotation -x)))
-                                  (set! (.. cube -rotation -y)
-                                        (+ 0.01 (.. cube -rotation -y)))
+                                  #_ (set! (.. cube -rotation -y)
+                                           (+ 0.01 (.. cube -rotation -y)))
+                                  (.update controls)
                                   (.render renderer scene camera)
                                   (when-let [stats (:stats stats)] (.update stats)))]
                           (animate))

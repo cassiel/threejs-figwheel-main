@@ -33,10 +33,13 @@ Whilst I generally prefer no-batteries-included examples to keep the content sim
 
 This leads to a slight oddity: launching the system from a ClojureScript file causes two startup attempts, which is benign but irritating. So the system is actually kicked off in a raw Javascript line embedded in =index.html= directly. I'm not convinced this is much better, but it does illustrate how to bring up and tear down the entire application from a browser console.
 
+* Orbit Controls
+
+three.js's orbit controls have been implemented; note that these seem to disable pretty much all browser keyboard shortcuts (including many menu command keys) if focus is on the rendering canvas.
+
 * To Do
 
 - It's not clear that even tearing down the rendering context frees the memory used by meshes, geometries, materials etc.
-- The example would benefit from mouse navigation via [[https://threejs.org/docs/#examples/en/controls/OrbitControls][orbit controls]].
 
 * License
 
