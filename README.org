@@ -40,6 +40,7 @@ three.js's orbit controls have been implemented; note that these seem to disable
 * To Do
 
 - It's not clear that even tearing down the rendering context frees the memory used by meshes, geometries, materials etc.
+- Fix the keyboard grab by the orbit controls.
 
 * License
 
