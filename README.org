@@ -5,7 +5,7 @@
 
 This is an update of the repo [[https://github.com/cassiel/threejs-figwheel][threejs-figwheel]] which has been left behind in the churn of Clojure[Script] tooling development. We have switched to [[https://figwheel.org/][Figwheel Main]]. We are still building with [[https://leiningen.org/][Leiningen]].
 
-The example code brings up a minimal [[http://threejs.org/][three.js]] environment coded in ClojureScript.
+The example code brings up a minimal [[http://threejs.org/][three.js]] 3D animated environment coded in ClojureScript.
 
 * Installation
 
@@ -19,9 +19,11 @@ In a terminal:
   lein fig -- --build dev --repl
 #+END_SRC
 
-That brings up a terminal REPL and hot-reloading of files.
+That brings up a terminal REPL and hot-reloading of files, and launches a browser window.
 
 Or, for a full network REPL from emacs: =M-x cider-jack-in-cljs=, entering =figwheel-main= and =:dev= at the two prompts respectively.
+
+If everything is working, there should be a simple non-lit tumbling cube animated in a full-window canvas.
 
 * License
 
