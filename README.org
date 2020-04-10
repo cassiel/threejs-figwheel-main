@@ -11,7 +11,7 @@ The example code brings up a minimal [[http://threejs.org/][three.js]] 3D animat
 
 * Installation
 
-We've followed the copious instructions [[https://figwheel.org/docs/installation.html][here]], opting for Leiningen rather than CLI Tools (mostly for familiarity).
+We've followed the copious instructions [[https://figwheel.org/docs/installation.html][here]], opting for Leiningen rather than CLI Tools (mostly for familiarity). With Leiningen installed, it should be ready to run.
 
 * Running
 
@@ -25,13 +25,13 @@ That brings up a terminal REPL and hot-reloading of files, and launches a browse
 
 Or, for a full network REPL from emacs: =M-x cider-jack-in-cljs=, entering =figwheel-main= and =:dev= at the two prompts respectively.
 
-If everything is working, there should be a simple non-lit tumbling cube animated in a full-window canvas.
+If everything is working, there should be a simple dual-light-source tumbling cube animated in a full-window canvas.
 
 * Components
 
 Whilst I generally prefer no-batteries-included examples to keep the content simple and focussed, for something stateful like three.js there are big benefits to using some off-the-shelf lifecycle code, so this project uses Stuart Sierra's [[https://github.com/stuartsierra/component][Component]], with a little bit of support from my own [[https://github.com/cassiel/lifecycle][Lifecycle]] library.
 
-This leads to a slight oddity: running the system from a ClojureScript file causes two launch attempts, which is benign but irritating. So the system is actually kicked off in a raw Javascript line embedded in =index.html= directly. I'm not convinced this is much better, but it does illustrate how to bring up and tear down the entire application from a browser console.
+This leads to a slight oddity: launching the system from a ClojureScript file causes two startup attempts, which is benign but irritating. So the system is actually kicked off in a raw Javascript line embedded in =index.html= directly. I'm not convinced this is much better, but it does illustrate how to bring up and tear down the entire application from a browser console.
 
 * To Do
 
