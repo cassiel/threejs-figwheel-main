@@ -3,7 +3,7 @@
             [net.cassiel.lifecycle :refer [starting stopping]]
             [cljsjs.three]))
 
-(defrecord WORLD [renderer stopper stats installed?]
+(defrecord WORLD [scene renderer stopper stats installed?]
   Object
   (toString [this] (str "WORLD " (seq this)))
 
@@ -18,24 +18,12 @@
                                                                  0.1
                                                                  1000)
                              renderer (js/THREE.WebGLRenderer.)
-                             geometry (js/THREE.BoxGeometry. 1 1 1)
-                             material (js/THREE.MeshPhongMaterial. (clj->js {:color 0xFFFFFF
-                                                                             :wireframe false}))
-                             cube (js/THREE.Mesh. geometry material)
-                             light1 (js/THREE.PointLight. 0xFF0000 1 100)
-                             light2 (js/THREE.PointLight. 0x00FF00 1 100)
-
                              controls (js/THREE.OrbitControls. camera (.-domElement renderer))
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]
                         (.setSize renderer (.-innerWidth js/window) (.-innerHeight js/window))
                         (.appendChild (.-body js/document) (.-domElement renderer))
-
-                        (doto scene
-                          (.add cube)
-                          (.add light1)
-                          (.add light2))
 
                         (set! (.. camera -position -z) 2)
                         (.update controls)
@@ -45,21 +33,25 @@
                         (set! (.. controls -dampingFactor) 0.25)
                         (set! (.. controls -screenSpacePanning) false)
 
-                        (.set (.. light1 -position) 10 10 10)
-                        (.set (.. light2 -position) -10 10 10)
-
                         (letfn [(animate []
                                   (when @RUNNING (js/requestAnimationFrame animate))
-                                  #_ (set! (.. cube -rotation -x)
-                                        (+ 0.01 (.. cube -rotation -x)))
-                                  #_ (set! (.. cube -rotation -y)
-                                           (+ 0.01 (.. cube -rotation -y)))
+
+                                  ;; Assuming we only have one top-level group
+                                  ;; (see components/content), rotate it. (We have
+                                  ;; to wait for it to be injected first.)
+                                  (when-let [obj (first (.-children scene))]
+                                    (set! (.. obj -rotation -x)
+                                          (+ 0.01 (.. obj -rotation -x)))
+                                    (set! (.. obj -rotation -y)
+                                          (+ 0.01 (.. obj -rotation -y))))
+
                                   (.update controls)
                                   (.render renderer scene camera)
                                   (when-let [stats (:stats stats)] (.update stats)))]
                           (animate))
 
                         (assoc this
+                               :scene scene
                                :renderer renderer
                                :stopper (fn [] (reset! RUNNING false))
                                :installed? true))))
@@ -73,4 +65,5 @@
                          (assoc this
                                 :stopper nil
                                 :renderer nil
+                                :scene nil
                                 :installed? false)))))

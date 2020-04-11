@@ -2,6 +2,7 @@
   (:require [com.stuartsierra.component :as component]
             [hello-world.components.stats :as stats]
             [hello-world.components.world :as world]
+            [hello-world.components.content :as content]
             [cljsjs.three]
             [cljsjs.stats]))
 
@@ -10,7 +11,9 @@
 (defn system []
   (component/system-map :stats (stats/map->STATS {})
                         :world (component/using (world/map->WORLD {})
-                                                [:stats]))  )
+                                                [:stats])
+                        :content (component/using (content/map->CONTENT {})
+                                                  [:world])))
 
 (defonce S (atom (system)))
 
