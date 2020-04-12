@@ -7,10 +7,19 @@
     g))
 
 (defn shift
-  "Shift an object non-destructively by wrapping it in a singleton group."
+  "Shift an object non-destructively by wrapping it in a singleton group.
+   (Since meshes can't apparently be shared, there's probably not much point in
+   making this non-destructive.)"
   [[x y z] obj]
   (let [g (group obj)]
     (.set (.. g -position) x y z)
+    g))
+
+(defn rotate [[rx ry rz] obj]
+  (let [g (group obj)]
+    (set! (.. g -rotation -x) rx)
+    (set! (.. g -rotation -y) ry)
+    (set! (.. g -rotation -z) rz)
     g))
 
 (defn group-spaced-by

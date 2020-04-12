@@ -7,11 +7,13 @@
 
 ;; For easy Git branch-based switching between forms as we develop:
 (def models {:cube      {:form               cube/form
-                         :rotation-increment 0.01}
+                         :rotation-increment 0.01
+                         :background         0x000000}
              :sculpture {:form               sculpture/form
-                         :rotation-increment 0.001}})
+                         :rotation-increment 0.001
+                         :background         0x808080}})
 
-(def model (:cube models))
+(def model (:sculpture models))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
   Object
@@ -36,7 +38,9 @@
                         (.setSize renderer (.-innerWidth js/window) (.-innerHeight js/window))
                         (.appendChild (.-body js/document) (.-domElement renderer))
 
-                        (set! (.. camera -position -z) 10)
+                        (set! (.. scene -background) (js/THREE.Color. (:background model)))
+
+                        (set! (.. camera -position -z) 5)
                         (.update controls)
 
                         ;; Camera control preferences:
@@ -46,19 +50,22 @@
 
                         (.add scene content)
 
-                        (letfn [(animate []
-                                  (when @RUNNING (js/requestAnimationFrame animate))
+                        (letfn [(animate [n]
+                                  (when @RUNNING (js/requestAnimationFrame
+                                                  (partial animate (inc n))))
 
-                                  (let [r (:rotation-increment model)]
+                                  #_ (let [r (:rotation-increment model)]
                                     (set! (.. content -rotation -x)
                                           (+ r (.. content -rotation -x)))
                                     (set! (.. content -rotation -y)
                                           (+ r (.. content -rotation -y))))
 
+                                  #_ (set! (.. content -rotation -x) (/ n 100))
+
                                   (.update controls)
                                   (.render renderer scene camera)
                                   (when-let [stats (:stats stats)] (.update stats)))]
-                          (animate))
+                          (animate 0))
 
                         (assoc this
                                :scene scene
