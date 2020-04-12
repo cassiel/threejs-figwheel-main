@@ -33,10 +33,21 @@
   (let [geometry (js/THREE.BoxGeometry. 1 1 1)
         material (js/THREE.MeshPhongMaterial. (clj->js {:color 0xFFFFFF
                                                         :wireframe false}))
-        cubes (repeatedly 9 #(js/THREE.Mesh. geometry material))
+        cube-row-fn (fn []
+                      (->> (repeatedly 9 #(js/THREE.Mesh. geometry material))
+                           (apply group-spaced-by [1.5 0 0])))
+        cube-sheet-fn (fn []
+                        (->> (repeatedly 9 cube-row-fn)
+                             (apply group-spaced-by [0 1.5 0])))
+        cube-matrix-fn (fn []
+                         (->> (repeatedly 9 cube-sheet-fn)
+                              (apply group-spaced-by [0 0 1.5])))
         light1 (js/THREE.PointLight. 0xFF0000 1 100)
-        light2 (js/THREE.PointLight. 0x00FF00 1 100)]
+        light2 (js/THREE.PointLight. 0x00FF00 1 100)
+        light3 (js/THREE.PointLight. 0x0000FF 1 100)
+        ]
 
-    (group (apply group-spaced-by [1 1 1] cubes)
-           (shift [10 10 10] light1)
-           (shift [-10 10 10] light2))))
+    (group (cube-matrix-fn)
+           (shift [0 0 10] light1)
+           (shift [0 10 0] light2)
+           (shift [10 0 0] light3))))

@@ -40,10 +40,11 @@
                         (letfn [(animate []
                                   (when @RUNNING (js/requestAnimationFrame animate))
 
-                                  (set! (.. content -rotation -x)
-                                        (+ 0.01 (.. content -rotation -x)))
-                                  (set! (.. content -rotation -y)
-                                        (+ 0.01 (.. content -rotation -y)))
+                                  #_ (do
+                                    (set! (.. content -rotation -x)
+                                          (+ 0.01 (.. content -rotation -x)))
+                                    (set! (.. content -rotation -y)
+                                          (+ 0.01 (.. content -rotation -y))))
 
                                   (.update controls)
                                   (.render renderer scene camera)
