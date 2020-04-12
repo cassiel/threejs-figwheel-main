@@ -6,3 +6,9 @@
     :world)
 
 (first  [])
+
+(def x 0.5)
+(def y 0.1)
+(def z 1.0)
+
+(map (fn [i] [(* i x) (* i y) (* i z)]) (range 10))

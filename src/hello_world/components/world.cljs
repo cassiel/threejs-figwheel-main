@@ -27,7 +27,7 @@
                         (.setSize renderer (.-innerWidth js/window) (.-innerHeight js/window))
                         (.appendChild (.-body js/document) (.-domElement renderer))
 
-                        (set! (.. camera -position -z) 2)
+                        (set! (.. camera -position -z) 10)
                         (.update controls)
 
                         ;; Camera control preferences:
