@@ -6,8 +6,12 @@
             [cljsjs.three]))
 
 ;; For easy Git branch-based switching between forms as we develop:
-(def model {:form cube/form
-            :rotation-increment 0.01})
+(def models {:cube      {:form               cube/form
+                         :rotation-increment 0.01}
+             :sculpture {:form               sculpture/form
+                         :rotation-increment 0.001}})
+
+(def model (:cube models))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
   Object
