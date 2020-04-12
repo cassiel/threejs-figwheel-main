@@ -3,7 +3,7 @@
             [cljsjs.three]))
 
 (def CELL-PITCH 0.5)
-(def BAR-WIDTH 0.15)
+(def BAR-WIDTH 0.05)
 (def CELLS-X 5)
 (def CELLS-Y 13)
 (def CELLS-Z 8)
@@ -25,17 +25,20 @@
          (apply geom/group-spaced-by [0 0 CELL-PITCH]))))
 
 (defn form []
-  (let [red (js/THREE.MeshPhongMaterial. (clj->js {:color 0xFF0000
+  (let [red (js/THREE.MeshPhongMaterial. (clj->js {:color 0xFF8080
                                                    :wireframe false}))
-        green (js/THREE.MeshPhongMaterial. (clj->js {:color 0x00FF00
+        green (js/THREE.MeshPhongMaterial. (clj->js {:color 0x80FF80
                                                      :wireframe false}))
-        blue (js/THREE.MeshPhongMaterial. (clj->js {:color 0x0000FF
+        blue (js/THREE.MeshPhongMaterial. (clj->js {:color 0x8080FF
                                                     :wireframe false}))
-        obj (vertical red CELLS-X CELLS-Y CELLS-Z)
+        obj (->> (vertical red CELLS-X CELLS-Y CELLS-Z)
+                 (geom/shift [(/ BAR-WIDTH 2) 0 0]))
         obj-rx (->> (vertical green CELLS-X CELLS-Z CELLS-Y)
-                    (geom/rotate [(/ js/Math.PI 2) 0 0]))
+                    (geom/rotate [(/ js/Math.PI 2) 0 0])
+                    (geom/shift [(- (/ BAR-WIDTH 2)) 0 0]))
         obj-rz (->> (vertical blue CELLS-Y CELLS-X CELLS-Z)
-                    (geom/rotate [0 0 (/ js/Math.PI 2)]))
+                    (geom/rotate [0 0 (/ js/Math.PI 2)])
+                    (geom/shift [0 BAR-WIDTH BAR-WIDTH]))
         #_ obj-z #_ (->> (vertical material CELLS-Z CELLS-X)
                    (geom/rotate [0 0 (/ js/Math.PI 2)]))
         dlight (js/THREE.DirectionalLight. 0xFFFFFF 1)
