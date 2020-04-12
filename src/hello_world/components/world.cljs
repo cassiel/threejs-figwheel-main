@@ -13,7 +13,7 @@
                          :rotation-increment 0.001
                          :background         0x808080}})
 
-(def model (:sculpture models))
+(def model (:cube models))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
   Object
