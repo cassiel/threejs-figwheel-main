@@ -5,6 +5,10 @@
             [hello-world.sculpture :as sculpture]
             [cljsjs.three]))
 
+;; For easy Git branch-based switching between forms as we develop:
+(def model {:form sculpture/form
+            :rotation-increment 0.01})
+
 (defrecord WORLD [scene renderer stopper stats installed?]
   Object
   (toString [this] (str "WORLD " (seq this)))
@@ -21,7 +25,7 @@
                                                                  1000)
                              renderer (js/THREE.WebGLRenderer.)
                              controls (js/THREE.OrbitControls. camera (.-domElement renderer))
-                             content (cube/form)
+                             content ((:form model))
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]
@@ -41,11 +45,11 @@
                         (letfn [(animate []
                                   (when @RUNNING (js/requestAnimationFrame animate))
 
-                                  (do
+                                  (let [r (:rotation-increment model)]
                                     (set! (.. content -rotation -x)
-                                          (+ 0.01 (.. content -rotation -x)))
+                                          (+ r (.. content -rotation -x)))
                                     (set! (.. content -rotation -y)
-                                          (+ 0.01 (.. content -rotation -y))))
+                                          (+ r (.. content -rotation -y))))
 
                                   (.update controls)
                                   (.render renderer scene camera)
