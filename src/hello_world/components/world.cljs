@@ -1,6 +1,7 @@
 (ns hello-world.components.world
   (:require [com.stuartsierra.component :as component]
             [net.cassiel.lifecycle :refer [starting stopping]]
+            [hello-world.content :as content]
             [cljsjs.three]))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
@@ -19,6 +20,7 @@
                                                                  1000)
                              renderer (js/THREE.WebGLRenderer.)
                              controls (js/THREE.OrbitControls. camera (.-domElement renderer))
+                             content (content/content)
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]
@@ -33,17 +35,15 @@
                         (set! (.. controls -dampingFactor) 0.25)
                         (set! (.. controls -screenSpacePanning) false)
 
+                        (.add scene content)
+
                         (letfn [(animate []
                                   (when @RUNNING (js/requestAnimationFrame animate))
 
-                                  ;; Assuming we only have one top-level group
-                                  ;; (see components/content), rotate it. (We have
-                                  ;; to wait for it to be injected first.)
-                                  (when-let [obj (first (.-children scene))]
-                                    (set! (.. obj -rotation -x)
-                                          (+ 0.01 (.. obj -rotation -x)))
-                                    (set! (.. obj -rotation -y)
-                                          (+ 0.01 (.. obj -rotation -y))))
+                                  (set! (.. content -rotation -x)
+                                        (+ 0.01 (.. content -rotation -x)))
+                                  (set! (.. content -rotation -y)
+                                        (+ 0.01 (.. content -rotation -y)))
 
                                   (.update controls)
                                   (.render renderer scene camera)
