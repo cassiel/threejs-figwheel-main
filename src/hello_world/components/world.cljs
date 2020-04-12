@@ -1,7 +1,8 @@
 (ns hello-world.components.world
   (:require [com.stuartsierra.component :as component]
             [net.cassiel.lifecycle :refer [starting stopping]]
-            [hello-world.content :as content]
+            [hello-world.cube :as cube]
+            [hello-world.sculpture :as sculpture]
             [cljsjs.three]))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
@@ -20,7 +21,7 @@
                                                                  1000)
                              renderer (js/THREE.WebGLRenderer.)
                              controls (js/THREE.OrbitControls. camera (.-domElement renderer))
-                             content (content/sculpture)
+                             content (cube/form)
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]
