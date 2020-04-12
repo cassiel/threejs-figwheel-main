@@ -20,7 +20,7 @@
                                                                  1000)
                              renderer (js/THREE.WebGLRenderer.)
                              controls (js/THREE.OrbitControls. camera (.-domElement renderer))
-                             content (content/content)
+                             content (content/sculpture)
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]
@@ -40,7 +40,7 @@
                         (letfn [(animate []
                                   (when @RUNNING (js/requestAnimationFrame animate))
 
-                                  #_ (do
+                                  (do
                                     (set! (.. content -rotation -x)
                                           (+ 0.01 (.. content -rotation -x)))
                                     (set! (.. content -rotation -y)
