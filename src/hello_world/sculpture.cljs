@@ -47,6 +47,8 @@
         light1 (geom/shift [5 0 0] (js/THREE.PointLight. 0xFFFFFF 1 100))
         light2 (js/THREE.PointLight. 0x00FF00 1 100)
         light3 (js/THREE.PointLight. 0x0000FF 1 100)
+        mini-light-1 (js/THREE.PointLight. 0xFF0000 1 1 2)
+        mini-light-2 (js/THREE.PointLight. 0xFFFF00 1 1 2)
         ]
 
     (geom/group obj
@@ -54,7 +56,8 @@
                 obj-rz
                 #_ (js/THREE.Mesh. (js/THREE.SphereGeometry. 0.1 32 32)
                                 material)
-                (geom/shift [0 0 10] light1)
+                (geom/shift [0 2 0] mini-light-1)
+                (geom/shift [0 -2 0] mini-light-2)
                 #_ (geom/shift [0 10 0] light2)
                 #_ (geom/shift [10 0 0] light3)
-                (geom/shift [10 0 10] dlight))))
+                #_ (geom/shift [10 0 10] dlight))))
