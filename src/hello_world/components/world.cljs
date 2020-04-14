@@ -2,6 +2,7 @@
   (:require [com.stuartsierra.component :as component]
             [net.cassiel.lifecycle :refer [starting stopping]]
             [hello-world.cube :as cube]
+            [hello-world.haüy :as haüy]
             [hello-world.sculpture :as sculpture]
             [cljsjs.three]))
 
@@ -21,14 +22,14 @@
                                                                  1000)
                              renderer (js/THREE.WebGLRenderer.)
                              controls (js/THREE.OrbitControls. camera (.-domElement renderer))
-                             content (sculpture/form)
+                             content (haüy/form)
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]
                         (.setSize renderer (.-innerWidth js/window) (.-innerHeight js/window))
                         (.appendChild (.-body js/document) (.-domElement renderer))
 
-                        (set! (.. scene -background) (js/THREE.Color. 0x000000))
+                        (set! (.. scene -background) (js/THREE.Color. 0x808080))
 
                         (set! (.. camera -position -z) 5)
                         (.update controls)
