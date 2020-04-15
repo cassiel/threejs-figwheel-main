@@ -29,7 +29,7 @@
                         (.setSize renderer (.-innerWidth js/window) (.-innerHeight js/window))
                         (.appendChild (.-body js/document) (.-domElement renderer))
 
-                        (set! (.. scene -background) (js/THREE.Color. 0x808080))
+                        (set! (.. scene -background) (js/THREE.Color. 0x404040))
 
                         (set! (.. camera -position -z) 5)
                         (.update controls)
