@@ -2,7 +2,8 @@
   (:require [com.stuartsierra.component :as component]
             [net.cassiel.lifecycle :refer [starting stopping]]
             [hello-world.cube :as cube]
-            ;; [hello-world.sculpture :as sculpture]
+            [hello-world.haüy :as haüy]
+            [hello-world.sculpture :as sculpture]
             [cljsjs.three]))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
@@ -28,7 +29,7 @@
                         (.setSize renderer (.-innerWidth js/window) (.-innerHeight js/window))
                         (.appendChild (.-body js/document) (.-domElement renderer))
 
-                        (set! (.. scene -background) (js/THREE.Color. 0x000000))
+                        (set! (.. scene -background) (js/THREE.Color. 0x202020))
 
                         (set! (.. camera -position -z) 5)
                         (.update controls)
