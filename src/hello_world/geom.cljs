@@ -1,5 +1,4 @@
-(ns hello-world.geom
-  (:require [cljsjs.three]))
+(ns hello-world.geom)
 
 (defn group [& objs]
   (let [g (js/THREE.Group.)]

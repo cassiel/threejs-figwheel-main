@@ -2,7 +2,6 @@
   (:require [com.stuartsierra.component :as component]
             [hello-world.components.stats :as stats]
             [hello-world.components.world :as world]
-            [cljsjs.three]
             [cljsjs.stats]))
 
 (enable-console-print!)

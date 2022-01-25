@@ -1,6 +1,5 @@
 (ns hello-world.cube
-  (:require [hello-world.geom :as geom]
-            [cljsjs.three]))
+  (:require [hello-world.geom :as geom]))
 
 (defn form []
   (let [geometry (js/THREE.BoxGeometry. 1 1 1)

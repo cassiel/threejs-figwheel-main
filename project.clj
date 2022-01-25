@@ -8,7 +8,6 @@
                                   [com.stuartsierra/component "1.0.0"]
                                   [net.cassiel/lifecycle "0.1.0-SNAPSHOT"]
 
-                                  [cljsjs/three "0.1.01-1"]
                                   [cljsjs/stats "16.0-0"]]
                    :resource-paths ["target"]
                    :clean-targets ^{:protect false} ["target"]}}

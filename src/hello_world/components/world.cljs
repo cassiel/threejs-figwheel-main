@@ -3,8 +3,7 @@
             [net.cassiel.lifecycle :refer [starting stopping]]
             [hello-world.cube :as cube]
             [hello-world.haüy :as haüy]
-            [hello-world.sculpture :as sculpture]
-            [cljsjs.three]))
+            [hello-world.sculpture :as sculpture]))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
   Object
@@ -14,7 +13,8 @@
   (start [this]
     (starting this
               :on installed?
-              :action #(let [scene (js/THREE.Scene.)
+              :action #(let [_ (js/console.log (str "[THREE v" js/THREE.REVISION "]"))
+                             scene (js/THREE.Scene.)
                              camera (js/THREE.PerspectiveCamera. 75
                                                                  (/ (.-innerWidth js/window)
                                                                     (.-innerHeight js/window))

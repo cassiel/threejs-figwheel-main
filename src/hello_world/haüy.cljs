@@ -1,6 +1,5 @@
 (ns hello-world.haüy
-  (:require [hello-world.geom :as geom]
-            [cljsjs.three]))
+  (:require [hello-world.geom :as geom]))
 
 (def base-geom (js/THREE.BoxGeometry. 0.5 0.5 0.5))
 (defn rand-grey []

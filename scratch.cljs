@@ -12,3 +12,11 @@
 (def z 1.0)
 
 (map (fn [i] [(* i x) (* i y) (* i z)]) (range 10))
+
+;; -----
+
+
+(js/THREE.Color. "hsl(0, 0%, 0%)")
+THREE.Color
+
+js/THREE.REVISION

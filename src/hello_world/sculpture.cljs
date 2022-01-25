@@ -1,6 +1,5 @@
 (ns hello-world.sculpture
-  (:require [hello-world.geom :as geom]
-            [cljsjs.three]))
+  (:require [hello-world.geom :as geom]))
 
 (def CELL-PITCH 0.5)
 (def BAR-WIDTH 0.05)

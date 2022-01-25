@@ -1,7 +1,6 @@
 (ns hello-world.components.stats
   (:require [com.stuartsierra.component :as component]
-            [net.cassiel.lifecycle :refer [starting stopping]]
-            [cljsjs.stats]))
+            [net.cassiel.lifecycle :refer [starting stopping]]))
 
 (defrecord STATS [stats installed?]
   Object
