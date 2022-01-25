@@ -12,4 +12,5 @@
                                   [cljsjs/stats "16.0-0"]]
                    :resource-paths ["target"]
                    :clean-targets ^{:protect false} ["target"]}}
+  :plugins [[lein-ancient "1.0.0-RC3"]]
   :aliases {"fig" ["trampoline" "run" "-m" "figwheel.main"]})
