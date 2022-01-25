@@ -2,7 +2,7 @@
   (:require [com.stuartsierra.component :as component]
             [net.cassiel.lifecycle :refer [starting stopping]]
             [hello-world.cube :as cube]
-            [hello-world.sculpture :as sculpture]
+            ;; [hello-world.sculpture :as sculpture]
             [cljsjs.three]))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
