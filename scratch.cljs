@@ -13,6 +13,8 @@
 
 (map (fn [i] [(* i x) (* i y) (* i z)]) (range 10))
 
+(reduce + (range 10))
+
 ;; -----
 
 
