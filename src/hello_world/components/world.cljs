@@ -22,7 +22,7 @@
                                                                  1000)
                              renderer (js/THREE.WebGLRenderer.)
                              controls (js/THREE.OrbitControls. camera (.-domElement renderer))
-                             content (cube/form)
+                             content (haüy/form)
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]

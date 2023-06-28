@@ -1,5 +1,6 @@
 (ns user
-  (:require [hello-world.core :as core]))
+  (:require [hello-world.core :as core]
+            [oops.core :refer [oget oget+ oset! oset!+ ocall oapply]]))
 
 (-> (deref core/S)
     :content
