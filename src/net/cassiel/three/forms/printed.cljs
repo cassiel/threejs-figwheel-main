@@ -4,18 +4,20 @@
 
 (defn form []
   (let [frame (js/THREE.Mesh. (js/THREE.BoxGeometry. 4 4 4)
-                              (js/THREE.MeshBasicMaterial. (clj->js {:color     0xFF0000
+                              (js/THREE.MeshBasicMaterial. (clj->js {:color     0x404040
                                                                      :wireframe true})))
 
         geometry  (js/THREE.BufferGeometry.)
         material (js/THREE.LineBasicMaterial. #js {:vertexColors true})
-        positions [-1 -1 -1 1 1 1]
-        colours   [0 1 0
-                   0 0 1]
+        positions (repeatedly 1000 (fn [] (repeatedly 3 #(- (* (rand) 4) 2))))
+        colours   (repeatedly 1000 (fn []
+                                     (repeatedly 3 rand)
+                                     #_ (if (> (rand) 0.5) [1 1 0] [0 0 1])
+                                     #_ (repeatedly 3 #(if (> (rand) 0.5) 1 0))))
         ]
     (doto geometry
-      (ocall :setAttribute "position" (js/THREE.Float32BufferAttribute. (clj->js positions) 3))
-      (ocall :setAttribute "color" (js/THREE.Float32BufferAttribute. (clj->js colours) 3)))
+      (ocall :setAttribute "position" (js/THREE.Float32BufferAttribute. (-> positions flatten clj->js) 3))
+      (ocall :setAttribute "color" (js/THREE.Float32BufferAttribute. (-> colours flatten clj->js) 3)))
 
     (geom/group frame
                 ;; (Lighting not needed for wireframes/lines:)
