@@ -1,4 +1,4 @@
-(ns net.cassiel.three.haüy
+(ns net.cassiel.three.forms.haüy
   (:require [net.cassiel.three.geom :as geom]))
 
 (def base-geom (js/THREE.BoxGeometry. 0.5 0.5 0.5))

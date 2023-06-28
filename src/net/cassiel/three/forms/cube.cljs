@@ -1,4 +1,4 @@
-(ns net.cassiel.three.cube
+(ns net.cassiel.three.forms.cube
   (:require [net.cassiel.three.geom :as geom]))
 
 (defn form []

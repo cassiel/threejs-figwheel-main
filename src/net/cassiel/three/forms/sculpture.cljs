@@ -1,4 +1,4 @@
-(ns net.cassiel.three.sculpture
+(ns net.cassiel.three.forms.sculpture
   (:require [net.cassiel.three.geom :as geom]))
 
 (def CELL-PITCH 0.5)
