@@ -1,4 +1,4 @@
-(ns hello-world.components.stats
+(ns net.cassiel.three.components.stats
   (:require [com.stuartsierra.component :as component]
             [net.cassiel.lifecycle :refer [starting stopping]]))
 

@@ -1,5 +1,5 @@
-(ns hello-world.cube
-  (:require [hello-world.geom :as geom]))
+(ns net.cassiel.three.cube
+  (:require [net.cassiel.three.geom :as geom]))
 
 (defn form []
   (let [geometry (js/THREE.BoxGeometry. 1 1 1)

@@ -1,7 +1,7 @@
-(ns ^:figwheel-hooks hello-world.core
+(ns ^:figwheel-hooks net.cassiel.three.core
   (:require [com.stuartsierra.component :as component]
-            [hello-world.components.stats :as stats]
-            [hello-world.components.world :as world]
+            [net.cassiel.three.components.stats :as stats]
+            [net.cassiel.three.components.world :as world]
             [cljsjs.stats]))
 
 (enable-console-print!)

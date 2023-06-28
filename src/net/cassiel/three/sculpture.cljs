@@ -1,5 +1,5 @@
-(ns hello-world.sculpture
-  (:require [hello-world.geom :as geom]))
+(ns net.cassiel.three.sculpture
+  (:require [net.cassiel.three.geom :as geom]))
 
 (def CELL-PITCH 0.5)
 (def BAR-WIDTH 0.05)

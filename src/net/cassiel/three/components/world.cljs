@@ -1,9 +1,9 @@
-(ns hello-world.components.world
+(ns net.cassiel.three.components.world
   (:require [com.stuartsierra.component :as component]
             [net.cassiel.lifecycle :refer [starting stopping]]
-            [hello-world.cube :as cube]
-            [hello-world.haüy :as haüy]
-            [hello-world.sculpture :as sculpture]))
+            [net.cassiel.three.cube :as cube]
+            [net.cassiel.three.haüy :as haüy]
+            [net.cassiel.three.sculpture :as sculpture]))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
   Object

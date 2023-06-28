@@ -1,4 +1,4 @@
-(ns hello-world.geom)
+(ns net.cassiel.three.geom)
 
 (defn group [& objs]
   (let [g (js/THREE.Group.)]
