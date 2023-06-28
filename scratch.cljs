@@ -1,5 +1,5 @@
 (ns user
-  (:require [hello-world.core :as core]
+  (:require [net.cassiel.three.core :as core]
             [oops.core :refer [oget oget+ oset! oset!+ ocall oapply]]))
 
 (-> (deref core/S)
@@ -23,3 +23,23 @@
 THREE.Color
 
 js/THREE.REVISION
+
+;; ---- Back/forth point iteration (normalised):
+
+(defn foo [x] (+ x x))
+
+(defn position [num-rows num-cols n]
+  (let [x (int (/ n num-rows))
+        y (mod n num-rows)
+        y (if (odd? x) (- num-rows 1 y) y)
+        ]
+    [(/ x (dec num-cols)) (/ y (dec num-rows))]))
+
+(map (partial position 4 5) (range 20))
+
+(int (/ 3 3))
+(mod 4 3)
+
+(even? 1)
+
+(flatten [1 [2 [3 4]]])
