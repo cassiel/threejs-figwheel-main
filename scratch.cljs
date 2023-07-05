@@ -16,6 +16,22 @@
 
 (reduce + (range 10))
 
+(reduce conj
+        (range 10)
+        #js [99 98 97])
+
+(reduce (fn [coll v] (reduce conj coll (ocall v :toArray)))
+        (range 10)
+        [(js/THREE.Vector3. 80 81 82)
+         (js/THREE.Vector3. 90 91 92)])
+
+(reduce conj
+        (range 10)
+        (-> (js/THREE.Vector3. 1 2 3)
+            (ocall :toArray)))
+
+
+
 ;; -----
 
 
