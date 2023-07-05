@@ -1,5 +1,6 @@
 (ns user
   (:require [net.cassiel.three.core :as core]
+            [clojure.spec.alpha :as s]
             [oops.core :refer [oget oget+ oset! oset!+ ocall oapply]]))
 
 (-> (deref core/S)
@@ -30,8 +31,6 @@
         (-> (js/THREE.Vector3. 1 2 3)
             (ocall :toArray)))
 
-
-
 ;; -----
 
 
@@ -59,3 +58,10 @@ js/THREE.REVISION
 (even? 1)
 
 (flatten [1 [2 [3 4]]])
+
+;; -----
+
+(s/def ::test (s/coll-of number? :kind seq?))
+
+(s/check-asserts true)
+(s/assert ::test [1 2 3])

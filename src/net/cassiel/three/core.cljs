@@ -2,9 +2,11 @@
   (:require [com.stuartsierra.component :as component]
             [net.cassiel.three.components.stats :as stats]
             [net.cassiel.three.components.world :as world]
+            [clojure.spec.alpha :as s]
             [cljsjs.stats]))
 
 (enable-console-print!)
+(s/check-asserts true)
 
 (defn system []
   (component/system-map :stats (stats/map->STATS {})

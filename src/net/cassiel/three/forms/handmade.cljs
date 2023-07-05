@@ -8,7 +8,7 @@
 (s/def ::positions (s/coll-of number? :kind seq?))
 (s/def ::normals (s/coll-of number? :kind seq?))
 (s/def ::colours (s/coll-of number? :kind seq?))
-(s/def ::buffers (s/keys :req [::positions ::normals ::colours]))
+(s/def ::buffers (s/keys :req-un [::positions ::normals ::colours]))
 
 (defn- v3ize [[x y z]] (js/THREE.Vector3. x y z))
 
