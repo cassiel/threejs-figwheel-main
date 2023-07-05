@@ -4,7 +4,7 @@
             [net.cassiel.three.forms.cube :as cube]
             [net.cassiel.three.forms.haüy :as haüy]
             [net.cassiel.three.forms.printed :as printed]
-            [net.cassiel.three.forms.tiles :as tiles]
+            [net.cassiel.three.forms.handmade :as handmade]
             [net.cassiel.three.forms.sculpture :as sculpture]))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
@@ -24,7 +24,7 @@
                                                                  1000)
                              renderer (js/THREE.WebGLRenderer.)
                              controls (js/THREE.OrbitControls. camera (.-domElement renderer))
-                             content (tiles/form)
+                             content (handmade/form)
                              ;; An "alive" flag to let us kill the animation
                              ;; refresh when we tear down:
                              RUNNING (atom true)]

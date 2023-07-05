@@ -1,4 +1,4 @@
-(ns net.cassiel.three.forms.tiles
+(ns net.cassiel.three.forms.handmade
   "Manual assembly of a mesh via BufferGeometry.
    Lifted largely from https://github.com/mrdoob/three.js/blob/master/examples/webgl_buffergeometry.html"
   (:require [net.cassiel.three.geom :as geom]
