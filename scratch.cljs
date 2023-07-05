@@ -65,3 +65,25 @@ js/THREE.REVISION
 
 (s/check-asserts true)
 (s/assert ::test [1 2 3])
+
+;; ---- Geometry generation
+
+(defn triangles [p1s p2s]
+  (let [p1s' (partition 2 1 p1s)
+        p2s' (partition 2 1 p2s)
+
+        ]
+    (->> (map (fn [[p1 p2] [p3 p4]]
+                [[p1 p3 p4] [p1 p4 p2]])
+              p1s' p2s')
+         flatten
+         (partition 3)
+         (partition 3)))
+  )
+
+(triangles [[0 0 0] [1 1 1] [2 2 2] [3 3 3]]
+           [[7 7 7] [8 8 8] [9 9 9] [10 10 10]])
+
+(defn scale [[f1 t1] [f2 t2] v]
+  (+ f2 (/ (* (- v f1) (- t2 f2))
+           (- t1 f1))))
