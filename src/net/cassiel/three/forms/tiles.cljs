@@ -35,16 +35,17 @@
         nz (oget cb :z)
 
         normals #js [nx ny nz nx ny nz nx ny nz]
-        colours #js [0.5 0.5 0.5 0.5
-                     0.5 0.5 0.5 0.5
-                     0.5 0.5 0.5 0.5]
+        colours #js [1 0 0 0.5
+                     1 1 1 0.5
+                     1 1 1 0.5]
 
-        ;; Skip array disposal for now.
+        dispose (fn [ba]
+                  (ocall ba :onUpload #(this-as this (oset! this :array nil))))
 
         _ (doto geometry
-            (ocall :setAttribute "position" (js/THREE.Float32BufferAttribute. positions 3))
-            (ocall :setAttribute "normal" (js/THREE.Float32BufferAttribute. normals 3))
-            (ocall :setAttribute "color" (js/THREE.Float32BufferAttribute. colours 4))
+            (ocall :setAttribute "position" (dispose (js/THREE.Float32BufferAttribute. positions 3)))
+            (ocall :setAttribute "normal" (dispose (js/THREE.Float32BufferAttribute. normals 3)))
+            (ocall :setAttribute "color" (dispose (js/THREE.Float32BufferAttribute. colours 4)))
             (ocall :computeBoundingSphere)
             )
 
