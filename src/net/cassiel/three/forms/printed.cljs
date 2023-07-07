@@ -2,7 +2,11 @@
   (:require [net.cassiel.three.geom :as geom]
             [oops.core :refer [oget oget+ oset! oset!+ ocall oapply]]))
 
-(defn position
+(defn- scale [[f1 t1] [f2 t2] v]
+  (+ f2 (/ (* (- v f1) (- t2 f2))
+           (- t1 f1))))
+
+(defn- position-xy
   "Simple back/forth iteration returning (x, y) for successive indices, -1/1 normalised."
   [num-rows num-cols n]
   (let [x (int (/ n num-rows))
@@ -18,11 +22,17 @@
 
         geometry  (js/THREE.BufferGeometry.)
         material  (js/THREE.LineBasicMaterial. #js {:vertexColors true})
+
+        rows 10
+        cols 20
+        layers 10
+
         positions (map
                    (fn [z]
-                     (map (fn [n] (let [[x y] (position 10 20 n)] [x y (-> z (/ 10) (- 0.45))]))
-                          (range 200)))
-                   (range 10))
+                     (map (fn [n] (let [[x y] (position-xy rows cols n)] [x y (scale [0 (dec layers)] [-1 1] z)]))
+                          (range (* rows cols))))
+                   (range layers))
+
         colours   (repeatedly 2000 (fn []
                                     (repeatedly 3 rand)
                                     #_ (if (> (rand) 0.5) [1 1 0] [0 0 1])

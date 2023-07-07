@@ -15,10 +15,14 @@
 (s/def ::triangle (s/coll-of ::triple :length 3))
 (s/def ::triangle-seq (s/coll-of ::triangle))
 
+(defn- scale [[f1 t1] [f2 t2] v]
+  (+ f2 (/ (* (- v f1) (- t2 f2))
+           (- t1 f1))))
+
 (defn- v3ize [[x y z]] (js/THREE.Vector3. x y z))
 
 (defn- add-face-to
-  "Add a face to the buffers' positions, normals, colours (defaulted). Note: buffer
+  "Add a face to the buffers' positions, colours (defaulted). Note: buffer
    sequences are assembled using conj so will be reversed if we use sequences
    rather than vectors. pA/pB/pC are triples."
   [{:keys [positions colours]} [pA pB pC]]
@@ -47,30 +51,37 @@
     (s/assert ::triangle-seq (->> (map (fn [[p1 p2] [p3 p4]]
                                          [[p1 p3 p4] [p1 p4 p2]])
                                        p1s' p2s')
-                                  flatten
+                                  flatten       ; Brute force...
                                   (partition 3) ; Points.
                                   (partition 3) ; Triangles.
                                   ))))
 
-(defn- scale [[f1 t1] [f2 t2] v]
-  (+ f2 (/ (* (- v f1) (- t2 f2))
-           (- t1 f1))))
+(defn- position-xy
+  "Simple back/forth iteration returning (x, y) for successive indices, -1/1 normalised."
+  [num-rows num-cols n]
+  (let [x (int (/ n num-rows))
+        y (mod n num-rows)
+        y (if (odd? x) (- num-rows 1 y) y)]
+    [(scale [0 (dec num-cols)] [-1 1] x)
+     (scale [0 (dec num-rows)] [-1 1] y)]))
 
 (defn form []
-  (let [frame (js/THREE.Mesh. (js/THREE.BoxGeometry. 4 4 4)
+  (let [frame (js/THREE.Mesh. (js/THREE.BoxGeometry. 2 2 2)
                               (js/THREE.MeshBasicMaterial. (clj->js {:color     0xFF0000
                                                                      :wireframe true})))
 
         geometry (js/THREE.BufferGeometry.)
 
-        steps 100
+        rows 10
+        cols 20
+        layers 10
 
-        points1 (s/assert ::triple-seq (map (fn [i] [(scale [0 (dec steps)] [-2 2] i)
-                                                     (scale [0 (dec steps)] [-2 2] i)
-                                                     -2]) (range steps)))
-        points2 (s/assert ::triple-seq (map (fn [i] [(scale [0 (dec steps)] [-2 2] i)
-                                                     (scale [0 (dec steps)] [2 -2] i)
-                                                     2]) (range steps)))
+        points1 (s/assert ::triple-seq (map (fn [n] (conj (position-xy rows cols n) -0.25))
+                                            (range (* rows cols))))
+
+        points2 (s/assert ::triple-seq (map (fn [n] (conj (position-xy rows cols n) +0.25))
+                                            (range (* rows cols))))
+
         triangles (triangles points1 points2)
 
         {:keys [positions colours]} (reduce add-face-to
@@ -101,6 +112,6 @@
 
     (geom/group frame
                 mesh
-                (geom/shift [0 0 5] (js/THREE.DirectionalLight. 0xFFFFFF 1))
-                (geom/shift [0 0 -5] (js/THREE.DirectionalLight. 0xFFFF00 1))
+                (geom/shift [2 2 2] (js/THREE.DirectionalLight. 0xFFFFFF 1))
+                (geom/shift [0 -2 -2] (js/THREE.DirectionalLight. 0xFFFF00 1))
                 )))
