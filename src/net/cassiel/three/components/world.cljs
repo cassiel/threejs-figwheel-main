@@ -5,7 +5,8 @@
             [net.cassiel.three.forms.haüy :as haüy]
             [net.cassiel.three.forms.printed :as printed]
             [net.cassiel.three.forms.handmade :as handmade]
-            [net.cassiel.three.forms.sculpture :as sculpture]))
+            [net.cassiel.three.forms.sculpture :as sculpture]
+            [oops.core :refer [oget oget+ oset! oset!+ ocall oapply]]))
 
 (defrecord WORLD [scene renderer stopper stats installed?]
   Object
@@ -31,15 +32,20 @@
                         (.setSize renderer (.-innerWidth js/window) (.-innerHeight js/window))
                         (.appendChild (.-body js/document) (.-domElement renderer))
 
-                        (set! (.. scene -background) (js/THREE.Color. 0x202020))
+                        (set! (.. scene -background) (js/THREE.Color. 0x808080))
 
-                        (set! (.. camera -position -z) 5)
-                        (.update controls)
+                        (doto camera
+                          (oset! :position.x 2)
+                          (oset! :position.y 1.5)
+                          (oset! :position.z 2))
 
                         ;; Camera control preferences:
-                        (set! (.. controls -enableDamping) true)
-                        (set! (.. controls -dampingFactor) 0.25)
-                        (set! (.. controls -screenSpacePanning) false)
+
+                        (doto controls
+                          (ocall :update)
+                          (oset! :enableDamping true)
+                          (oset! :dampingFactor 0.25)
+                          (oset! :screenSpacePanning false))
 
                         (.add scene content)
 

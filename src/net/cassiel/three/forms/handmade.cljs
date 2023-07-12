@@ -56,24 +56,24 @@
                                   (partition 3) ; Triangles.
                                   ))))
 
+(def ^:private ROWS 6)
+(def ^:private COLS 6)
+(def ^:private LAYERS 10)
+
 (defn- position-xy
   "Simple back/forth iteration returning (x, y) for successive indices, -1/1 normalised."
-  [num-rows num-cols n]
-  (let [x (int (/ n num-rows))
-        y (mod n num-rows)
-        y (if (odd? x) (- num-rows 1 y) y)]
-    [(scale [0 (dec num-cols)] [-1 1] x)
-     (scale [0 (dec num-rows)] [-1 1] y)]))
+  [n]
+  (let [x (int (/ n ROWS))
+        y (mod n ROWS)
+        y (if (odd? x) (- ROWS 1 y) y)]
+    [(scale [0 (dec COLS)] [-1 1] x)
+     (scale [0 (dec ROWS)] [-1 1] y)]))
 
 (defn- mutation-xy
-  "Test mutation according to normalised (positive) (x, y, z) location. Result is signed (dx, dy)."
+  "Test mutation according to normalised (signed) (x, y, z) location. Result is signed (dx, dy)."
   [x y z]
   [(* z (rand) 0.1)
    (* z (rand) 0.1)])
-
-(def ^:private ROWS 10)
-(def ^:private COLS 20)
-(def ^:private LAYERS 10)
 
 (defn- build-mesh [layer-index]
   (let [geometry (js/THREE.BufferGeometry.)
@@ -81,10 +81,13 @@
         low-z (scale [0 LAYERS] [-1 1] layer-index)
         high-z (scale [0 LAYERS] [-1 1] (inc layer-index))
 
-        points1 (s/assert ::triple-seq (map (fn [n] (conj (position-xy ROWS COLS n) low-z))
-                                            (range (* ROWS COLS))))
+        points1 (s/assert ::triple-seq (->> (range (* ROWS COLS))
+                                            (map (fn [n] (conj (position-xy n) low-z)))
+                                            (map (fn [[x y z]] (let [[dx dy] (mutation-xy x y z)]
+                                                                 [(+ x dx) (+ y dy) z])
+                                                   ))))
 
-        points2 (s/assert ::triple-seq (map (fn [n] (conj (position-xy ROWS COLS n) high-z))
+        points2 (s/assert ::triple-seq (map (fn [n] (conj (position-xy n) high-z))
                                             (range (* ROWS COLS))))
 
         triangles (triangles points1 points2)
@@ -98,12 +101,12 @@
         dispose (fn [ba]
                   (ocall ba :onUpload #(this-as this (oset! this :array nil))))
 
-        material (js/THREE.MeshPhongMaterial. #js {:color        0xD5D5D5
+        material (js/THREE.MeshPhongMaterial. #js {:color        0x000000
                                                    :specular     0xFFFFFF
                                                    :shininess    250
                                                    :side         js/THREE.DoubleSide
                                                    :vertexColors true
-                                                   :transparent  true
+                                                   :transparent  false
                                                    :wireframe    false})]
     (doto geometry
       (ocall :setAttribute "position" (dispose (js/THREE.Float32BufferAttribute. positions 3)))
@@ -111,7 +114,16 @@
       (ocall :setAttribute "color" (dispose (js/THREE.Float32BufferAttribute. colours 4)))
       (ocall :computeBoundingSphere))
 
-    (js/THREE.Mesh. geometry material)))
+    (let [wireframe (js/THREE.WireframeGeometry. geometry)
+          line (js/THREE.LineSegments. geometry)]
+      (doto line
+        (oset! :material.depthTest false)
+        (oset! :material.opacity 0.25)
+        (oset! :material.color 0xFFFFFF)
+        (oset! :material.transparent true))
+
+      (geom/group (js/THREE.Mesh. geometry material)
+                  line))))
 
 (defn form []
   (let [frame (js/THREE.Mesh. (js/THREE.BoxGeometry. 2 2 2)
@@ -119,7 +131,8 @@
                                                                      :wireframe true})))]
 
     (geom/group frame
-                (build-mesh 0)
+                (apply geom/group (map build-mesh (range LAYERS)))
                 (geom/shift [2 2 2] (js/THREE.DirectionalLight. 0xFFFFFF 1))
-                (geom/shift [0 -2 -2] (js/THREE.DirectionalLight. 0xFFFF00 1))
+                (geom/shift [0 0 0] (js/THREE.DirectionalLight. 0xFFFF00 1))
+                (geom/shift [-2 -2 -2] (js/THREE.DirectionalLight. 0xFF8800 1))
                 )))
