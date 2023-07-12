@@ -1,7 +1,8 @@
 (ns user
   (:require [net.cassiel.three.core :as core]
             [clojure.spec.alpha :as s]
-            [oops.core :refer [oget oget+ oset! oset!+ ocall oapply]]))
+            [oops.core :refer [oget oget+ oset! oset!+ ocall oapply]]
+            [net.cassiel.three.forms.handmade :as handmade]))
 
 (-> (deref core/S)
     :content
@@ -70,9 +71,7 @@ js/THREE.REVISION
 
 (defn triangles [p1s p2s]
   (let [p1s' (partition 2 1 p1s)
-        p2s' (partition 2 1 p2s)
-
-        ]
+        p2s' (partition 2 1 p2s)]
     (->> (map (fn [[p1 p2] [p3 p4]]
                 [[p1 p3 p4] [p1 p4 p2]])
               p1s' p2s')
@@ -81,11 +80,33 @@ js/THREE.REVISION
          (partition 3)))
   )
 
-(triangles [[0 0 0] [1 1 1] [2 2 2] [3 3 3]]
-           [[7 7 7] [8 8 8] [9 9 9] [10 10 10]])
+(defn triangles [ps qs]
+
+  )
+
+(handmade/triangle-strip [[0 0 0] [1 1 1] [2 2 2]]
+                         [[7 7 7] [8 8 8] [9 9 9]])
+
+
+(handmade/triangle-mesh [
+                         [[0 0 0] [1 1 1] [2 2 2]]
+                         [[4 4 4] [5 5 5] [6 6 6]]
+                         [[7 7 7] [8 8 8] [9 9 9]]
+                         ])
+
+(handmade/build-triangles)
+
+(first (partition 2 1 [
+                       [[0 0 0] [1 1 1] [2 2 2]]
+                       [[7 7 7] [8 8 8] [9 9 9]]
+                       ]))
+
 
 (defn scale [[f1 t1] [f2 t2] v]
   (+ f2 (/ (* (- v f1) (- t2 f2))
            (- t1 f1))))
 
 (conj [2 3] 1)
+
+(partition 3 1
+           (interleave [1 2 3 4] [7 8 9 10]))

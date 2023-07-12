@@ -15,9 +15,28 @@
 (s/def ::triangle (s/coll-of ::triple :length 3))
 (s/def ::triangle-seq (s/coll-of ::triangle))
 
+(def ^:private ROWS 4)
+(def ^:private COLS 4)
+(def ^:private LAYERS 40)
+
 (defn- scale [[f1 t1] [f2 t2] v]
   (+ f2 (/ (* (- v f1) (- t2 f2))
            (- t1 f1))))
+
+(defn- position-xy
+  "Simple back/forth iteration returning (x, y) for successive indices, -1/1 normalised."
+  [n]
+  (let [x (int (/ n ROWS))
+        y (mod n ROWS)
+        y (if (odd? x) (- ROWS 1 y) y)]
+    [(scale [0 (dec COLS)] [-1 1] x)
+     (scale [0 (dec ROWS)] [-1 1] y)]))
+
+(defn- mutation-xy
+  "Test mutation according to normalised (signed) (x, y, z) location. Result is signed (dx, dy)."
+  [x y z]
+  [(* z (rand) 0.4)
+   (* z (rand) 0.4)])
 
 (defn- v3ize [[x y z]] (js/THREE.Vector3. x y z))
 
@@ -45,52 +64,27 @@
     )
   )
 
-(defn- triangles [p1s p2s]
-  (let [p1s' (partition 2 1 p1s)
-        p2s' (partition 2 1 p2s)]
-    (s/assert ::triangle-seq (->> (map (fn [[p1 p2] [p3 p4]]
-                                         [[p1 p3 p4] [p1 p4 p2]])
-                                       p1s' p2s')
-                                  flatten       ; Brute force...
-                                  (partition 3) ; Points.
-                                  (partition 3) ; Triangles.
-                                  ))))
+(defn triangle-strip [p1s p2s]
+  ;; Alternate faces will be in reverse handedness - issue for translucency.
+  (s/assert ::triangle-seq (partition 3 1 (interleave p1s p2s))))
 
-(def ^:private ROWS 6)
-(def ^:private COLS 6)
-(def ^:private LAYERS 10)
+(defn triangle-mesh [point-list-seq]
+  (let [strips (map (partial apply triangle-strip) (partition 2 1 point-list-seq))]
+    (s/assert ::triangle-seq (reduce concat strips))))
 
-(defn- position-xy
-  "Simple back/forth iteration returning (x, y) for successive indices, -1/1 normalised."
-  [n]
-  (let [x (int (/ n ROWS))
-        y (mod n ROWS)
-        y (if (odd? x) (- ROWS 1 y) y)]
-    [(scale [0 (dec COLS)] [-1 1] x)
-     (scale [0 (dec ROWS)] [-1 1] y)]))
+(defn- build-triangles []
+  (let [point-list-seq (map (fn [index] (map (fn [n]
+                                               (let [[x y z] (conj (position-xy n) (scale [0 (dec LAYERS)] [-1 1] index))
+                                                     [dx dy] (mutation-xy x y z)]
+                                                 [(+ x dx) (+ y dy) z]))
+                                             (range (* ROWS COLS))))
+                            (range LAYERS))]
+    (triangle-mesh point-list-seq)))
 
-(defn- mutation-xy
-  "Test mutation according to normalised (signed) (x, y, z) location. Result is signed (dx, dy)."
-  [x y z]
-  [(* z (rand) 0.1)
-   (* z (rand) 0.1)])
-
-(defn- build-mesh [layer-index]
+(defn- build-mesh []
   (let [geometry (js/THREE.BufferGeometry.)
 
-        low-z (scale [0 LAYERS] [-1 1] layer-index)
-        high-z (scale [0 LAYERS] [-1 1] (inc layer-index))
-
-        points1 (s/assert ::triple-seq (->> (range (* ROWS COLS))
-                                            (map (fn [n] (conj (position-xy n) low-z)))
-                                            (map (fn [[x y z]] (let [[dx dy] (mutation-xy x y z)]
-                                                                 [(+ x dx) (+ y dy) z])
-                                                   ))))
-
-        points2 (s/assert ::triple-seq (map (fn [n] (conj (position-xy n) high-z))
-                                            (range (* ROWS COLS))))
-
-        triangles (triangles points1 points2)
+        triangles (build-triangles)
 
         {:keys [positions colours]} (reduce add-face-to
                                             { }
@@ -106,7 +100,8 @@
                                                    :shininess    250
                                                    :side         js/THREE.DoubleSide
                                                    :vertexColors true
-                                                   :transparent  false
+                                                   :transparent  true
+                                                   :opacity      0.3
                                                    :wireframe    false})]
     (doto geometry
       (ocall :setAttribute "position" (dispose (js/THREE.Float32BufferAttribute. positions 3)))
@@ -115,12 +110,12 @@
       (ocall :computeBoundingSphere))
 
     (let [wireframe (js/THREE.WireframeGeometry. geometry)
-          line (js/THREE.LineSegments. geometry)]
+          line      (js/THREE.LineSegments. geometry)]
       (doto line
         (oset! :material.depthTest false)
-        (oset! :material.opacity 0.25)
+        (oset! :material.opacity 1)
         (oset! :material.color 0xFFFFFF)
-        (oset! :material.transparent true))
+        (oset! :material.transparent false))
 
       (geom/group (js/THREE.Mesh. geometry material)
                   line))))
@@ -131,7 +126,7 @@
                                                                      :wireframe true})))]
 
     (geom/group frame
-                (apply geom/group (map build-mesh (range LAYERS)))
+                (build-mesh)
                 (geom/shift [2 2 2] (js/THREE.DirectionalLight. 0xFFFFFF 1))
                 (geom/shift [0 0 0] (js/THREE.DirectionalLight. 0xFFFF00 1))
                 (geom/shift [-2 -2 -2] (js/THREE.DirectionalLight. 0xFF8800 1))
