@@ -13,4 +13,7 @@ pom.xml.asc
 .nrepl-port
 .cpcache/
 .rebel_readline_history
+.calva
+.clj-kondo
+.lsp
 _COMPILED.js
