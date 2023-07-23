@@ -1,10 +1,7 @@
 (ns net.cassiel.three.forms.printed
   (:require [net.cassiel.three.geom :as geom]
+            [net.cassiel.three.utils :as u]
             [oops.core :refer [oget oget+ oset! oset!+ ocall oapply]]))
-
-(defn- scale [[f1 t1] [f2 t2] v]
-  (+ f2 (/ (* (- v f1) (- t2 f2))
-           (- t1 f1))))
 
 (defn- position-xy
   "Simple back/forth iteration returning (x, y) for successive indices, -1/1 normalised."
@@ -29,7 +26,7 @@
 
         positions (map
                    (fn [z]
-                     (map (fn [n] (let [[x y] (position-xy rows cols n)] [x y (scale [0 (dec layers)] [-1 1] z)]))
+                     (map (fn [n] (let [[x y] (position-xy rows cols n)] [x y (u/scale [0 (dec layers)] [-1 1] z)]))
                           (range (* rows cols))))
                    (range layers))
 

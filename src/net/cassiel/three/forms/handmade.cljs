@@ -3,6 +3,8 @@
    Lifted largely from https://github.com/mrdoob/three.js/blob/master/examples/webgl_buffergeometry.html
    except we just call .computeVertexNormals() rather than do that manually."
   (:require [net.cassiel.three.geom :as geom]
+            [net.cassiel.three.geom-fns :as fns]
+            [net.cassiel.three.utils :as u]
             [clojure.spec.alpha :as s]
             [oops.core :refer [oget oget+ oset! oset!+ ocall oapply]]))
 
@@ -19,24 +21,14 @@
 (def ^:private COLS 4)
 (def ^:private LAYERS 40)
 
-(defn- scale [[f1 t1] [f2 t2] v]
-  (+ f2 (/ (* (- v f1) (- t2 f2))
-           (- t1 f1))))
-
 (defn- position-xy
   "Simple back/forth iteration returning (x, y) for successive indices, -1/1 normalised."
   [n]
   (let [x (int (/ n ROWS))
         y (mod n ROWS)
         y (if (odd? x) (- ROWS 1 y) y)]
-    [(scale [0 (dec COLS)] [-1 1] x)
-     (scale [0 (dec ROWS)] [-1 1] y)]))
-
-(defn- mutation-xy
-  "Test mutation according to normalised (signed) (x, y, z) location. Result is signed (dx, dy)."
-  [x y z]
-  [(* z (rand) 0.4)
-   (* z (rand) 0.4)])
+    [(u/scale [0 (dec COLS)] [-1 1] x)
+     (u/scale [0 (dec ROWS)] [-1 1] y)]))
 
 (defn- v3ize [[x y z]] (js/THREE.Vector3. x y z))
 
@@ -73,11 +65,15 @@
     (s/assert ::triangle-seq (reduce concat strips))))
 
 (defn- build-triangles []
-  (let [point-list-seq (map (fn [index] (map (fn [n]
-                                               (let [[x y z] (conj (position-xy n) (scale [0 (dec LAYERS)] [-1 1] index))
-                                                     [dx dy] (mutation-xy x y z)]
-                                                 [(+ x dx) (+ y dy) z]))
-                                             (range (* ROWS COLS))))
+  (let [num-points (* ROWS COLS)
+        point-list-seq (map (fn [z-index] (map (fn [n]
+                                               (let [[x y z] (conj (position-xy n) (u/scale [0 (dec LAYERS)] [-1 1] z-index))
+                                                     [x' y'] (fns/main :x x
+                                                                       :y y
+                                                                       :z z
+                                                                       :phase (u/scale [0 (dec num-points)] [-1 1] n))]
+                                                 [x' y' z]))
+                                               (range num-points)))
                             (range LAYERS))]
     (triangle-mesh point-list-seq)))
 

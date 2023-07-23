@@ -110,3 +110,15 @@ js/THREE.REVISION
 
 (partition 3 1
            (interleave [1 2 3 4] [7 8 9 10]))
+
+(defn foo [& {:keys [x y z]}]
+  (str "X: " x " Y: " y " Z: " z))
+
+(foo :x 1 :y 2 :z 3)
+
+(foo {:x 1 :y 2 :z 3})
+
+(rand)
+(js/Math.cos js/Math.PI)
+
+js/Math.PI
