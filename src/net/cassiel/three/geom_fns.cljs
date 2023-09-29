@@ -30,6 +30,15 @@
       [(u/scale [-1 1] [x1 x2] z)
        (u/scale [-1 1] [y1 y2] z)])))
 
+(defn- x-crossfade [f1 f2]
+  (fn [& {:keys [x y z phase]}]
+    (let [[y1 z1] (f1 :x x :y y :z z :phase phase)
+          [y2 z2] (f2 :x x :y y :z z :phase phase)]
+      [(u/scale [-1 1] [y1 y2] x)
+       (u/scale [-1 1] [z1 z2] x)])))
+
+
+
 (defn ident [& {:keys [x y]}] [x y])
 
 ;; General arguments:
@@ -53,4 +62,5 @@
    (* phase (signed-rand) 0.2)])
 
 ;; (def main (delta-to-abs-form mutation-xy))
-(def main (z-crossfade ident disc))
+(def main (z-crossfade (x-crossfade mutation-xy disc)
+                       ident))
